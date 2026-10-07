@@ -1,0 +1,2504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Mini ChatGPT — Chicken Butt Chaos</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  color:white;
+  min-height:100vh;
+  transition:background 0.7s;
+}
+
+/* THEMES */
+
+body.day{
+  background:linear-gradient(135deg,#4facfe,#00f2fe);
+}
+
+body.night{
+  background:linear-gradient(135deg,#080b1a,#182848);
+}
+
+body.sunset{
+  background:linear-gradient(135deg,#ff512f,#dd2476);
+}
+
+body.space{
+  background:
+    radial-gradient(circle at 20% 20%,#ffffff 1px,transparent 2px),
+    radial-gradient(circle at 70% 30%,#ffffff 1px,transparent 2px),
+    radial-gradient(circle at 40% 80%,#ffffff 1px,transparent 2px),
+    linear-gradient(135deg,#020024,#090979,#000);
+}
+
+body.glitch{
+  background:
+    repeating-linear-gradient(
+      45deg,
+      #ff00cc 0 20px,
+      #00ffff 20px 40px,
+      #12002b 40px 60px
+    );
+}
+
+body.rainbow{
+  background:linear-gradient(
+    120deg,
+    #ff0000,
+    #ff9900,
+    #ffff00,
+    #00ff00,
+    #00ffff,
+    #0066ff,
+    #9900ff
+  );
+  background-size:400% 400%;
+  animation:rainbow 8s ease infinite;
+}
+
+@keyframes rainbow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* HEADER */
+
+header{
+  background:rgba(10,10,25,.85);
+  padding:20px;
+  text-align:center;
+  border-bottom:2px solid #ffffff33;
+}
+
+header h1{
+  margin:0;
+  font-size:32px;
+}
+
+header p{
+  margin:5px;
+  color:#ddd;
+}
+
+/* NAV */
+
+nav{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  background:rgba(10,10,20,.85);
+  padding:10px;
+}
+
+button{
+  border:0;
+  border-radius:12px;
+  padding:11px 16px;
+  margin:5px;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+  background:#ffd43b;
+  color:#161616;
+  transition:.15s;
+}
+
+button:hover{
+  transform:scale(1.05);
+}
+
+button:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+/* PAGES */
+
+.page{
+  display:none;
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+.page.active{
+  display:block;
+}
+
+.panel{
+  background:rgba(20,22,40,.92);
+  border:2px solid #ffffff22;
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 10px 35px #0005;
+}
+
+/* STATS */
+
+.stats{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+}
+
+.stat{
+  background:#292d46;
+  padding:12px 18px;
+  border-radius:12px;
+}
+
+/* CHAT */
+
+.chat{
+  min-height:280px;
+  max-height:400px;
+  overflow:auto;
+  background:#080912;
+  border-radius:15px;
+  padding:15px;
+}
+
+.msg{
+  padding:12px;
+  margin:8px 0;
+  border-radius:12px;
+}
+
+.msg.user{
+  background:#392065;
+}
+
+.msg.bot{
+  background:#16462f;
+  cursor:copy;
+}
+
+.msg.bot:hover{
+  outline:2px dashed #ffd43b;
+}
+
+.chatInput{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+.chatInput input{
+  flex:1;
+  min-width:0;
+  padding:14px;
+  border-radius:12px;
+  border:2px solid #454b68;
+  background:#0c0e19;
+  color:white;
+  font-size:16px;
+}
+
+/* CHICKENS */
+
+.chickens{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:15px;
+}
+
+.chicken{
+  background:#252940;
+  border:2px solid #3b405b;
+  padding:18px;
+  border-radius:18px;
+  text-align:center;
+}
+
+.chicken.selected{
+  border-color:#ffd43b;
+  box-shadow:0 0 20px #ffd43b55;
+}
+
+.chicken .emoji{
+  font-size:60px;
+}
+
+/* ROULETTE */
+
+.roulette{
+  text-align:center;
+}
+
+.rouletteDisplay{
+  font-size:90px;
+  min-height:120px;
+}
+
+#rouletteText{
+  font-size:23px;
+  font-weight:bold;
+}
+
+/* RPS ARENA */
+
+.arena{
+  position:relative;
+  height:390px;
+  overflow:hidden;
+  border-radius:20px;
+  background:linear-gradient(#282637,#15141e);
+  border:3px solid #595267;
+}
+
+.moon{
+  position:absolute;
+  width:90px;
+  height:90px;
+  right:50px;
+  top:30px;
+  border-radius:50%;
+  background:#eee;
+  box-shadow:0 0 30px white;
+}
+
+.ground{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:110px;
+  background:#29252d;
+  border-top:3px solid #555;
+}
+
+.tombstone{
+  position:absolute;
+  bottom:80px;
+  width:65px;
+  height:80px;
+  background:#68626d;
+  border-radius:30px 30px 5px 5px;
+  text-align:center;
+  padding-top:20px;
+  color:#222;
+  font-weight:bold;
+}
+
+.t1{left:8%}
+.t2{left:43%}
+.t3{right:8%}
+
+.fighter{
+  position:absolute;
+  bottom:100px;
+  font-size:70px;
+  transition:.2s;
+}
+
+#playerFighter{
+  left:15%;
+}
+
+#enemyFighter{
+  right:15%;
+}
+
+/* RACE */
+
+.raceTrack{
+  position:relative;
+  height:360px;
+  overflow:hidden;
+  border-radius:20px;
+  background:#30343a;
+  border:3px solid #555;
+}
+
+.lane{
+  position:absolute;
+  left:0;
+  right:0;
+  height:50%;
+}
+
+.lane.one{
+  top:0;
+  border-bottom:3px dashed #aaa;
+}
+
+.lane.two{
+  bottom:0;
+}
+
+.startLine{
+  position:absolute;
+  left:30px;
+  top:0;
+  bottom:0;
+  width:8px;
+  background:white;
+}
+
+.finishLine{
+  position:absolute;
+  right:30px;
+  top:0;
+  bottom:0;
+  width:12px;
+  background:repeating-linear-gradient(
+    0deg,
+    white 0 15px,
+    black 15px 30px
+  );
+}
+
+.racer{
+  position:absolute;
+  font-size:52px;
+  transition:left .1s,top .2s;
+}
+
+.racer.p2{
+  filter:drop-shadow(0 0 8px #00ffff);
+}
+
+.pad{
+  position:absolute;
+  width:70px;
+  height:55px;
+  background:#16d9ff;
+  border-radius:15px;
+  text-align:center;
+  padding-top:17px;
+  color:#001;
+  font-weight:bold;
+}
+
+.obstacle{
+  position:absolute;
+  width:48px;
+  height:48px;
+  background:#d43f3f;
+  border-radius:50%;
+  text-align:center;
+  padding-top:11px;
+}
+
+#raceMessage{
+  text-align:center;
+  font-size:18px;
+  min-height:30px;
+  color:#ffd43b;
+}
+
+/* SKINS */
+
+.skinGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:15px;
+}
+
+.skin{
+  background:#24283a;
+  padding:18px;
+  border-radius:16px;
+  text-align:center;
+  border:2px solid #393e55;
+}
+
+.skin .emoji{
+  font-size:55px;
+}
+
+.skin.owned{
+  border-color:#43e97b;
+}
+
+.skin.equipped{
+  border-color:#ffd43b;
+}
+
+/* THEMES */
+
+.themeGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;
+}
+
+.themeButton{
+  min-height:75px;
+  color:white;
+  border:2px solid #ffffff55;
+}
+
+/* SECRETS */
+
+.secret{
+  background:#202438;
+  margin:8px 0;
+  padding:12px;
+  border-radius:10px;
+}
+
+.secret.found{
+  background:#164d32;
+  text-decoration:line-through;
+}
+
+/* BOSS */
+
+.boss{
+  text-align:center;
+  font-size:110px;
+  animation:pulse 1s infinite alternate;
+}
+
+@keyframes pulse{
+  from{transform:scale(1)}
+  to{transform:scale(1.08)}
+}
+
+.bossBar{
+  height:25px;
+  background:#222;
+  border-radius:20px;
+  overflow:hidden;
+  margin:15px 0;
+}
+
+#bossHealthBar{
+  height:100%;
+  width:100%;
+  background:#e53935;
+  transition:.3s;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:600px){
+  header h1{
+    font-size:25px;
+  }
+
+  button{
+    font-size:14px;
+    padding:10px 13px;
+  }
+
+  .raceTrack{
+    height:320px;
+  }
+}
+</style>
+</head>
+
+<body class="day">
+
+<header>
+  <h1>🤖 Mini ChatGPT</h1>
+  <p>Created by Ihsan 👑</p>
+  <p>🐔 Chicken Butt Chaos Edition 🐔</p>
+</header>
+
+<nav>
+  <button onclick="showPage('chat')">💬 Chat</button>
+  <button onclick="showPage('roulette')">🎰 Roulette</button>
+  <button onclick="showPage('rps')">🪦 RPS</button>
+  <button onclick="showPage('race')">🏁 Race</button>
+  <button onclick="showPage('skins')">🎨 Skins</button>
+  <button onclick="showPage('themes')">🌈 Background</button>
+  <button onclick="showPage('secrets')">🏅 Secrets</button>
+</nav>
+
+<main>
+
+<!-- CHAT -->
+
+<section id="chat" class="page active">
+
+<div class="panel">
+
+<h2>💬 Mini ChatGPT</h2>
+
+<div id="chatBox" class="chat">
+
+<div class="msg bot">
+Hello! I'm Mini ChatGPT 🤖<br>
+Try asking me something!
+</div>
+
+</div>
+
+<div class="chatInput">
+<input id="chatInput" placeholder="Type something...">
+<button id="sendBtn">Send</button>
+</div>
+
+<p style="text-align:center;color:#aaa">
+💡 Copying one of my green responses awakens something...
+</p>
+
+</div>
+
+</section>
+
+
+<!-- ROULETTE -->
+
+<section id="roulette" class="page">
+
+<div class="panel roulette">
+
+<h2>🎰 Chicken Butt Roulette</h2>
+
+<p>
+Your Chicken Butt's <b>Luck</b> affects the roulette!
+</p>
+
+<div id="rouletteDisplay" class="rouletteDisplay">
+🐔
+</div>
+
+<div id="rouletteText">
+Ready?
+</div>
+
+<button id="spinBtn">
+🎰 SPIN
+</button>
+
+</div>
+
+<div class="panel">
+
+<h2>🐔 Chicken Butts</h2>
+
+<div id="chickenList" class="chickens"></div>
+
+</div>
+
+</section>
+
+
+<!-- RPS -->
+
+<section id="rps" class="page">
+
+<div class="panel">
+
+<h2>🪦 Tombstone Chicken Butt Battle</h2>
+
+<div class="arena">
+
+<div class="moon"></div>
+
+<div class="tombstone t1">
+RIP<br>🐔
+</div>
+
+<div class="tombstone t2">
+RIP<br>🥚
+</div>
+
+<div class="tombstone t3">
+RIP<br>💀
+</div>
+
+<div id="playerFighter" class="fighter">
+🐔
+</div>
+
+<div id="enemyFighter" class="fighter">
+🐔
+</div>
+
+<div class="ground"></div>
+
+</div>
+
+<div style="text-align:center">
+
+<button onclick="playRPS('rock')">
+🪨 Rock
+</button>
+
+<button onclick="playRPS('paper')">
+📄 Paper
+</button>
+
+<button onclick="playRPS('scissors')">
+✂️ Scissors
+</button>
+
+</div>
+
+<div id="rpsResult" style="text-align:center;color:#ffd43b">
+Choose your weapon!
+</div>
+
+</div>
+
+</section>
+
+
+<!-- TWO PLAYER RACE -->
+
+<section id="race" class="page">
+
+<div class="panel">
+
+<h2>🏁 2-Player Chicken Butt Race</h2>
+
+<div class="stats">
+
+<div class="stat">
+⭐ Points:
+<span id="points">0</span>
+</div>
+
+<div class="stat">
+🏆 Wins:
+<span id="wins">0</span>
+</div>
+
+<div class="stat">
+⚡ Boost:
+<span id="boostStat">100</span>
+</div>
+
+</div>
+
+<p style="text-align:center">
+<b>Player 1:</b> W = up, S = down, D = boost
+<br>
+<b>Player 2:</b> ↑ = up, ↓ = down, → = boost
+</p>
+
+<div id="raceTrack" class="raceTrack">
+
+<div class="lane one"></div>
+<div class="lane two"></div>
+
+<div class="startLine"></div>
+<div class="finishLine"></div>
+
+<div class="pad" style="left:32%;top:50px">
+⚡
+</div>
+
+<div class="pad" style="left:58%;bottom:50px">
+⚡
+</div>
+
+<div class="obstacle" style="left:44%;top:45px">
+🪨
+</div>
+
+<div class="obstacle" style="left:72%;bottom:50px">
+💣
+</div>
+
+<div id="racer1" class="racer">
+🐔
+</div>
+
+<div id="racer2" class="racer p2">
+🐥
+</div>
+
+</div>
+
+<div id="raceMessage">
+Press Start Race!
+</div>
+
+<div style="text-align:center">
+
+<button id="startRace">
+🏁 Start 2 Player Race
+</button>
+
+<button onclick="throwRaceButt(1)">
+💥 P1 Throw
+</button>
+
+<button onclick="throwRaceButt(2)">
+💥 P2 Throw
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- SKINS -->
+
+<section id="skins" class="page">
+
+<div class="panel">
+
+<h2>🎨 Chicken Butt Skins</h2>
+
+<h3>
+⭐ Points:
+<span id="skinPoints">0</span>
+</h3>
+
+<p>
+Every skin has a different power!
+</p>
+
+<div id="skinGrid" class="skinGrid"></div>
+
+</div>
+
+</section>
+
+
+<!-- THEMES -->
+
+<section id="themes" class="page">
+
+<div class="panel">
+
+<h2>🌈 Background Changer</h2>
+
+<p>Choose the world your Chicken Butts live in!</p>
+
+<div class="themeGrid">
+
+<button class="themeButton"
+style="background:linear-gradient(135deg,#4facfe,#00f2fe)"
+onclick="changeTheme('day')">
+☀️ Day
+</button>
+
+<button class="themeButton"
+style="background:linear-gradient(135deg,#080b1a,#182848)"
+onclick="changeTheme('night')">
+🌙 Night
+</button>
+
+<button class="themeButton"
+style="background:linear-gradient(135deg,#ff512f,#dd2476)"
+onclick="changeTheme('sunset')">
+🌅 Sunset
+</button>
+
+<button class="themeButton"
+style="background:#05052b"
+onclick="changeTheme('space')">
+🚀 Space
+</button>
+
+<button class="themeButton"
+style="background:linear-gradient(45deg,#ff00cc,#00ffff)"
+onclick="changeTheme('glitch')">
+⚡ Glitch
+</button>
+
+<button class="themeButton"
+style="background:linear-gradient(90deg,red,orange,yellow,green,blue,purple)"
+onclick="changeTheme('rainbow')">
+🌈 Rainbow
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- SECRETS -->
+
+<section id="secrets" class="page">
+
+<div class="panel">
+
+<h2>🏅 Secrets Badge</h2>
+
+<div id="secretList"></div>
+
+<h2 id="allSecrets"
+style="display:none;text-align:center">
+🎉 FOUND ALL SECRETS 🎉
+</h2>
+
+</div>
+
+
+<div id="bossPanel" class="panel" style="display:none">
+
+<h2>👹 ULTIMATE BOSS</h2>
+
+<div class="boss">
+👹
+</div>
+
+<p style="text-align:center">
+THE BOSS HAS AWAKENED.
+</p>
+
+<div class="bossBar">
+<div id="bossHealthBar"></div>
+</div>
+
+<div id="bossHealthText"
+style="text-align:center">
+Boss HP: 300
+</div>
+
+<div style="text-align:center">
+
+<button onclick="attackBoss()">
+💥 ATTACK
+</button>
+
+<button onclick="defendBoss()">
+🛡️ DEFEND
+</button>
+
+</div>
+
+<div id="bossMessage"
+style="text-align:center;color:#ff7777">
+The boss is waiting...
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<script>
+
+/* =========================
+   SAVE
+========================= */
+
+const saved =
+JSON.parse(localStorage.getItem("miniChatGPTSave") || "{}");
+
+let points =
+Number(saved.points || 0);
+
+let wins =
+Number(saved.wins || 0);
+
+let equippedSkin =
+saved.equippedSkin || "classic";
+
+let ownedSkins =
+saved.ownedSkins || ["classic"];
+
+let currentTheme =
+saved.theme || "day";
+
+let secrets =
+saved.secrets || {
+  glitch:false,
+  copy:false,
+  win:false,
+  boss:false,
+  all:false
+};
+
+document.body.className=currentTheme;
+
+
+/* =========================
+   SOUND
+========================= */
+
+let audioCtx=null;
+
+function sound(type){
+
+  try{
+
+    audioCtx ||= new(
+      window.AudioContext ||
+      window.webkitAudioContext
+    )();
+
+    const osc=
+      audioCtx.createOscillator();
+
+    const gain=
+      audioCtx.createGain();
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    const now=
+      audioCtx.currentTime;
+
+    let frequency=440;
+    let duration=.15;
+
+    if(type==="click")frequency=500;
+    if(type==="spin")frequency=250;
+    if(type==="win")frequency=850;
+    if(type==="lose")frequency=130;
+    if(type==="boost")frequency=1000;
+    if(type==="throw")frequency=250;
+    if(type==="boss")frequency=70;
+    if(type==="secret")frequency=1300;
+    if(type==="hit")frequency=180;
+
+    osc.frequency.setValueAtTime(
+      frequency,
+      now
+    );
+
+    if(type==="spin"){
+      osc.frequency.exponentialRampToValueAtTime(
+        1000,
+        now+.6
+      );
+      duration=.6;
+    }
+
+    if(type==="boss"){
+      osc.frequency.exponentialRampToValueAtTime(
+        30,
+        now+.9
+      );
+      duration=.9;
+    }
+
+    gain.gain.setValueAtTime(
+      .12,
+      now
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      .001,
+      now+duration
+    );
+
+    osc.start(now);
+    osc.stop(now+duration);
+
+  }catch(e){}
+}
+
+
+/* =========================
+   SAVE FUNCTION
+========================= */
+
+function save(){
+
+  localStorage.setItem(
+    "miniChatGPTSave",
+    JSON.stringify({
+      points,
+      wins,
+      equippedSkin,
+      ownedSkins,
+      theme:currentTheme,
+      secrets
+    })
+  );
+
+  updateUI();
+}
+
+function updateUI(){
+
+  document.getElementById("points").textContent=points;
+
+  document.getElementById("wins").textContent=wins;
+
+  document.getElementById("skinPoints").textContent=points;
+}
+
+
+/* =========================
+   PAGE SWITCH
+========================= */
+
+function showPage(id){
+
+  document.querySelectorAll(".page")
+  .forEach(p=>{
+    p.classList.remove("active");
+  });
+
+  document.getElementById(id)
+  .classList.add("active");
+}
+
+
+/* =========================
+   CHICKENS
+========================= */
+
+const chickens=[
+
+{
+ id:"speedy",
+ name:"Speedy Butt",
+ emoji:"🐔",
+ speed:95,
+ boost:80,
+ luck:35
+},
+
+{
+ id:"tiny",
+ name:"Tiny Turbo",
+ emoji:"🐥",
+ speed:120,
+ boost:100,
+ luck:30
+},
+
+{
+ id:"egg",
+ name:"Egg Butt",
+ emoji:"🥚",
+ speed:65,
+ boost:70,
+ luck:90
+},
+
+{
+ id:"mega",
+ name:"Mega Butt",
+ emoji:"💪🐔",
+ speed:80,
+ boost:130,
+ luck:65
+}
+
+];
+
+let selectedChicken="speedy";
+
+
+function getChicken(){
+
+  return chickens.find(
+    c=>c.id===selectedChicken
+  ) || chickens[0];
+
+}
+
+
+/* =========================
+   CHICKEN LIST
+========================= */
+
+function renderChickens(){
+
+  const box=
+    document.getElementById("chickenList");
+
+  box.innerHTML="";
+
+  chickens.forEach(c=>{
+
+    const div=
+      document.createElement("div");
+
+    div.className=
+      "chicken "+
+      (selectedChicken===c.id
+      ?"selected":"");
+
+    div.innerHTML=`
+
+      <div class="emoji">
+        ${c.emoji}
+      </div>
+
+      <h3>${c.name}</h3>
+
+      <p>⚡ Speed: ${c.speed}</p>
+      <p>💨 Boost: ${c.boost}</p>
+      <p>🍀 Luck: ${c.luck}</p>
+
+      <button>
+        Select
+      </button>
+
+    `;
+
+    div.querySelector("button")
+    .onclick=()=>{
+
+      selectedChicken=c.id;
+
+      sound("click");
+
+      renderChickens();
+
+      updateChickenDisplay();
+    };
+
+    box.appendChild(div);
+
+  });
+
+}
+
+
+/* =========================
+   SKIN DATA
+========================= */
+
+const skins=[
+
+{
+ id:"classic",
+ name:"Classic Butt",
+ emoji:"🐔",
+ price:0,
+ power:"Balanced"
+},
+
+{
+ id:"gold",
+ name:"Golden Butt",
+ emoji:"✨🐔",
+ price:100,
+ power:"+25% Luck"
+},
+
+{
+ id:"fire",
+ name:"Fire Butt",
+ emoji:"🔥🐔",
+ price:200,
+ power:"+30% Speed"
+},
+
+{
+ id:"ice",
+ name:"Ice Butt",
+ emoji:"❄️🐔",
+ price:250,
+ power:"Slows Boss attacks"
+},
+
+{
+ id:"robot",
+ name:"Robot Butt",
+ emoji:"🤖🐔",
+ price:400,
+ power:"+40 Boost"
+},
+
+{
+ id:"alien",
+ name:"Alien Butt",
+ emoji:"👽🐔",
+ price:500,
+ power:"+50% Roulette Luck"
+},
+
+{
+ id:"ghost",
+ name:"Ghost Butt",
+ emoji:"👻🐔",
+ price:750,
+ power:"Boss attacks miss sometimes"
+},
+
+{
+ id:"godly",
+ name:"GODLY BUTT",
+ emoji:"👑🐔",
+ price:1000,
+ power:"+50% Speed + Luck"
+}
+
+];
+
+
+function getSkin(){
+
+  return skins.find(
+    s=>s.id===equippedSkin
+  ) || skins[0];
+
+}
+
+
+/* =========================
+   SKIN STATS
+========================= */
+
+function getSpeed(){
+
+  let value=getChicken().speed;
+
+  const skin=equippedSkin;
+
+  if(skin==="fire")
+    value*=1.30;
+
+  if(skin==="godly")
+    value*=1.50;
+
+  return value;
+}
+
+
+function getLuck(){
+
+  let value=getChicken().luck;
+
+  if(equippedSkin==="gold")
+    value*=1.25;
+
+  if(equippedSkin==="alien")
+    value*=1.50;
+
+  if(equippedSkin==="godly")
+    value*=1.50;
+
+  return value;
+}
+
+
+function getBoost(){
+
+  let value=getChicken().boost;
+
+  if(equippedSkin==="robot")
+    value+=40;
+
+  return value;
+}
+
+
+function updateChickenDisplay(){
+
+  const skin=getSkin();
+
+  document.getElementById(
+    "racer1"
+  ).textContent=skin.emoji;
+
+  document.getElementById(
+    "playerFighter"
+  ).textContent=skin.emoji;
+
+}
+
+
+/* =========================
+   ROULETTE
+========================= */
+
+let spinning=false;
+
+document.getElementById(
+  "spinBtn"
+).onclick=()=>{
+
+  if(spinning)return;
+
+  spinning=true;
+
+  sound("spin");
+
+  const display=
+    document.getElementById(
+      "rouletteDisplay"
+    );
+
+  const text=
+    document.getElementById(
+      "rouletteText"
+    );
+
+  let count=0;
+
+  const timer=setInterval(()=>{
+
+    const random=
+      chickens[
+        Math.floor(
+          Math.random()*
+          chickens.length
+        )
+      ];
+
+    display.textContent=
+      random.emoji;
+
+    text.textContent=
+      random.name;
+
+    count++;
+
+    if(count>=14){
+
+      clearInterval(timer);
+
+      let luck=getLuck();
+
+      let chosen;
+
+      /*
+        Higher luck gives a better
+        chance of Mega Butt.
+      */
+
+      if(
+        Math.random()*100 <
+        luck
+      ){
+
+        chosen=chickens[
+          Math.floor(
+            Math.random()*chickens.length
+          )
+        ];
+
+      }else{
+
+        chosen=chickens[
+          Math.floor(
+            Math.random()*chickens.length
+          )
+        ];
+
+      }
+
+      selectedChicken=chosen.id;
+
+      display.textContent=
+        chosen.emoji;
+
+      text.textContent=
+        "🎉 YOU GOT "+chosen.name+"!";
+
+      sound("win");
+
+      renderChickens();
+
+      updateChickenDisplay();
+
+      spinning=false;
+    }
+
+  },90);
+
+};
+
+
+/* =========================
+   RPS
+========================= */
+
+function playRPS(player){
+
+  const choices=[
+    "rock",
+    "paper",
+    "scissors"
+  ];
+
+  const enemy=
+    choices[
+      Math.floor(
+        Math.random()*3
+      )
+    ];
+
+  const emoji={
+    rock:"🪨",
+    paper:"📄",
+    scissors:"✂️"
+  };
+
+  document.getElementById(
+    "enemyFighter"
+  ).textContent=emoji[enemy];
+
+  if(player===enemy){
+
+    document.getElementById(
+      "rpsResult"
+    ).textContent=
+      "🤝 DRAW!";
+
+    sound("click");
+
+    return;
+  }
+
+  const won=
+
+    (player==="rock" &&
+     enemy==="scissors") ||
+
+    (player==="paper" &&
+     enemy==="rock") ||
+
+    (player==="scissors" &&
+     enemy==="paper");
+
+  if(won){
+
+    const reward=
+      10+
+      Math.floor(getLuck()/20);
+
+    points+=reward;
+
+    document.getElementById(
+      "rpsResult"
+    ).textContent=
+      "🏆 YOU WIN! +"+
+      reward+
+      " POINTS";
+
+    sound("win");
+
+  }else{
+
+    document.getElementById(
+      "rpsResult"
+    ).textContent=
+      "💀 YOU LOSE!";
+
+    sound("lose");
+  }
+
+  save();
+}
+
+
+/* =========================
+   TWO PLAYER RACE
+========================= */
+
+let racing=false;
+
+let p1={
+ x:40,
+ lane:0,
+ boost:100
+};
+
+let p2={
+ x:40,
+ lane:1,
+ boost:100
+};
+
+let raceTimer=null;
+
+let keys={};
+
+document.addEventListener(
+  "keydown",
+  e=>{
+    keys[e.key]=true;
+
+    if([
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowRight"
+    ].includes(e.key)){
+      e.preventDefault();
+    }
+  }
+);
+
+document.addEventListener(
+  "keyup",
+  e=>{
+    keys[e.key]=false;
+  }
+);
+
+
+function updateRace(){
+
+  const r1=
+    document.getElementById("racer1");
+
+  const r2=
+    document.getElementById("racer2");
+
+  r1.style.left=
+    p1.x+"px";
+
+  r1.style.top=
+    p1.lane===0
+    ?"55px"
+    :"225px";
+
+  r2.style.left=
+    p2.x+"px";
+
+  r2.style.top=
+    p2.lane===0
+    ?"55px"
+    :"225px";
+
+  document.getElementById(
+    "boostStat"
+  ).textContent=
+    Math.floor(
+      p1.boost
+    );
+
+}
+
+
+function startRace(){
+
+  if(racing)return;
+
+  racing=true;
+
+  p1={
+    x:40,
+    lane:0,
+    boost:getBoost()
+  };
+
+  p2={
+    x:40,
+    lane:1,
+    boost:100
+  };
+
+  document.getElementById(
+    "raceMessage"
+  ).textContent=
+    "🏁 GO! P1 = WASD | P2 = ARROWS";
+
+  sound("win");
+
+  updateRace();
+
+  raceTimer=
+    setInterval(
+      raceLoop,
+      50
+    );
+}
+
+
+function raceLoop(){
+
+  const speed1=
+    getSpeed()/220;
+
+  const speed2=
+    0.35;
+
+  /* P1 controls */
+
+  if(keys["w"] || keys["W"])
+    p1.lane=0;
+
+  if(keys["s"] || keys["S"])
+    p1.lane=1;
+
+  if(keys["d"] || keys["D"]){
+
+    if(p1.boost>0){
+
+      p1.x+=5;
+
+      p1.boost=
+        Math.max(
+          0,
+          p1.boost-1
+        );
+
+      sound("boost");
+    }
+
+  }else{
+
+    p1.x+=speed1;
+  }
+
+
+  /* P2 controls */
+
+  if(keys["ArrowUp"])
+    p2.lane=0;
+
+  if(keys["ArrowDown"])
+    p2.lane=1;
+
+  if(keys["ArrowRight"]){
+
+    if(p2.boost>0){
+
+      p2.x+=5;
+
+      p2.boost=
+        Math.max(
+          0,
+          p2.boost-1
+        );
+
+    }
+
+  }else{
+
+    p2.x+=speed2;
+  }
+
+
+  /* Finish */
+
+  if(p1.x>=760){
+
+    endRace(
+      1
+    );
+
+    return;
+  }
+
+  if(p2.x>=760){
+
+    endRace(
+      2
+    );
+
+    return;
+  }
+
+  updateRace();
+}
+
+
+function endRace(player){
+
+  clearInterval(
+    raceTimer
+  );
+
+  racing=false;
+
+  if(player===1){
+
+    wins++;
+    points+=100;
+
+    secrets.win=true;
+
+    document.getElementById(
+      "raceMessage"
+    ).textContent=
+      "🏆 PLAYER 1 WINS! +100 POINTS!";
+
+    sound("win");
+
+  }else{
+
+    points+=25;
+
+    document.getElementById(
+      "raceMessage"
+    ).textContent=
+      "🏆 PLAYER 2 WINS!";
+
+    sound("lose");
+  }
+
+  checkSecrets();
+  save();
+}
+
+
+function throwRaceButt(player){
+
+  if(!racing)return;
+
+  sound("throw");
+
+  if(player===1){
+
+    p2.x=
+      Math.max(
+        40,
+        p2.x-40
+      );
+
+  }else{
+
+    p1.x=
+      Math.max(
+        40,
+        p1.x-40
+      );
+  }
+
+  document.getElementById(
+    "raceMessage"
+  ).textContent=
+    "💥 PLAYER "+player+
+    " THREW A CHICKEN BUTT!";
+
+  updateRace();
+}
+
+
+document.getElementById(
+  "startRace"
+).onclick=startRace;
+
+
+/* =========================
+   SKINS
+========================= */
+
+function renderSkins(){
+
+  const grid=
+    document.getElementById(
+      "skinGrid"
+    );
+
+  grid.innerHTML="";
+
+  skins.forEach(s=>{
+
+    const owned=
+      ownedSkins.includes(s.id);
+
+    const equipped=
+      equippedSkin===s.id;
+
+    const div=
+      document.createElement("div");
+
+    div.className=
+      "skin "+
+      (owned?"owned ":"")+
+      (equipped?"equipped":"");
+
+    let action;
+
+    if(equipped){
+
+      action="EQUIPPED";
+
+    }else if(owned){
+
+      action="Equip";
+
+    }else{
+
+      action=
+        "Buy for "+
+        s.price+
+        " ⭐";
+    }
+
+    div.innerHTML=`
+
+      <div class="emoji">
+        ${s.emoji}
+      </div>
+
+      <h3>${s.name}</h3>
+
+      <p>
+        ⚡ ${s.power}
+      </p>
+
+      <button>
+        ${action}
+      </button>
+
+    `;
+
+    div.querySelector(
+      "button"
+    ).onclick=()=>{
+
+      if(equipped)return;
+
+      if(owned){
+
+        equippedSkin=s.id;
+
+        sound("click");
+
+      }else{
+
+        if(points<s.price){
+
+          alert(
+            "Not enough points! ⭐"
+          );
+
+          return;
+        }
+
+        points-=s.price;
+
+        ownedSkins.push(
+          s.id
+        );
+
+        equippedSkin=s.id;
+
+        sound("win");
+      }
+
+      renderSkins();
+      updateChickenDisplay();
+      save();
+    };
+
+    grid.appendChild(div);
+
+  });
+
+}
+
+
+/* =========================
+   THEMES
+========================= */
+
+function changeTheme(theme){
+
+  currentTheme=theme;
+
+  document.body.className=
+    theme;
+
+  sound("click");
+
+  save();
+}
+
+
+/* =========================
+   SECRETS
+========================= */
+
+const secretData=[
+
+{
+ id:"glitch",
+ name:"⚡ Say Glitch World"
+},
+
+{
+ id:"copy",
+ name:"📋 Copy a Mini ChatGPT response"
+},
+
+{
+ id:"win",
+ name:"🏆 Win the Race"
+},
+
+{
+ id:"boss",
+ name:"👹 Defeat the Boss"
+},
+
+{
+ id:"all",
+ name:"🌟 Find All Secrets"
+}
+
+];
+
+
+function renderSecrets(){
+
+  const box=
+    document.getElementById(
+      "secretList"
+    );
+
+  box.innerHTML="";
+
+  secretData.forEach(s=>{
+
+    const div=
+      document.createElement(
+        "div"
+      );
+
+    div.className=
+      "secret "+
+      (secrets[s.id]
+      ?"found":"");
+
+    div.textContent=
+      (secrets[s.id]
+      ?"✅ "
+      :"🔒 ")+
+      s.name;
+
+    box.appendChild(div);
+  });
+
+}
+
+
+function checkSecrets(){
+
+  if(
+    secrets.glitch &&
+    secrets.copy &&
+    secrets.win &&
+    secrets.boss
+  ){
+
+    secrets.all=true;
+
+    document.getElementById(
+      "allSecrets"
+    ).style.display=
+      "block";
+  }
+
+  renderSecrets();
+}
+
+
+/* =========================
+   BOSS
+========================= */
+
+let bossHP=300;
+
+let playerHP=100;
+
+let defending=false;
+
+let bossActive=false;
+
+function awakenBoss(){
+
+  bossActive=true;
+
+  bossHP=300;
+
+  playerHP=100;
+
+  defending=false;
+
+  document.getElementById(
+    "bossPanel"
+  ).style.display=
+    "block";
+
+  document.getElementById(
+    "bossMessage"
+  ).textContent=
+    "👹 THE BOSS HAS AWAKENED!";
+
+  updateBoss();
+
+  sound("boss");
+
+  showPage("secrets");
+}
+
+
+function updateBoss(){
+
+  const percent=
+    Math.max(
+      0,
+      bossHP/300*100
+    );
+
+  document.getElementById(
+    "bossHealthBar"
+  ).style.width=
+    percent+"%";
+
+  document.getElementById(
+    "bossHealthText"
+  ).textContent=
+    "Boss HP: "+
+    bossHP+
+    " | Your HP: "+
+    playerHP;
+}
+
+
+function attackBoss(){
+
+  if(!bossActive)return;
+
+  const damage=
+    equippedSkin==="godly"
+    ?35
+    :25;
+
+  bossHP=
+    Math.max(
+      0,
+      bossHP-damage
+    );
+
+  sound("hit");
+
+  if(bossHP<=0){
+
+    defeatBoss();
+
+    return;
+  }
+
+  bossAttack();
+
+  updateBoss();
+}
+
+
+function defendBoss(){
+
+  if(!bossActive)return;
+
+  defending=true;
+
+  document.getElementById(
+    "bossMessage"
+  ).textContent=
+    "🛡️ You defended!";
+
+  sound("click");
+
+  setTimeout(()=>{
+
+    bossAttack();
+
+    defending=false;
+
+    updateBoss();
+
+  },400);
+}
+
+
+function bossAttack(){
+
+  if(!bossActive)return;
+
+  /*
+    Ghost skin gives a chance
+    to dodge the boss.
+  */
+
+  if(
+    equippedSkin==="ghost" &&
+    Math.random()<0.45
+  ){
+
+    document.getElementById(
+      "bossMessage"
+    ).textContent=
+      "👻 GHOST POWER! BOSS MISSED!";
+
+    sound("click");
+
+    return;
+  }
+
+  let damage=
+    Math.floor(
+      Math.random()*16
+    )+10;
+
+  if(
+    equippedSkin==="ice"
+  ){
+
+    damage=
+      Math.floor(
+        damage*.6
+      );
+  }
+
+  if(defending){
+
+    damage=
+      Math.floor(
+        damage*.35
+      );
+  }
+
+  playerHP=
+    Math.max(
+      0,
+      playerHP-damage
+    );
+
+  document.getElementById(
+    "bossMessage"
+  ).textContent=
+    "👹 BOSS ATTACK! -"+
+    damage+
+    " HP";
+
+  sound("boss");
+
+  if(playerHP<=0){
+
+    bossActive=false;
+
+    document.getElementById(
+      "bossMessage"
+    ).textContent=
+      "💀 You lost! The boss survives.";
+
+    return;
+  }
+
+  updateBoss();
+}
+
+
+function defeatBoss(){
+
+  bossActive=false;
+
+  secrets.boss=true;
+
+  points+=300;
+
+  document.getElementById(
+    "bossMessage"
+  ).textContent=
+    "🎉 BOSS DEFEATED! +300 POINTS! 🐔🐔🐔";
+
+  document.getElementById(
+    "bossHealthText"
+  ).textContent=
+    "👑 BOSS DEFEATED!";
+
+  sound("win");
+
+  checkSecrets();
+
+  save();
+}
+
+
+/* =========================
+   CHAT
+========================= */
+
+const chatBox=
+  document.getElementById(
+    "chatBox"
+  );
+
+const chatInput=
+  document.getElementById(
+    "chatInput"
+  );
+
+
+function addMessage(
+  text,
+  type
+){
+
+  const div=
+    document.createElement(
+      "div"
+    );
+
+  div.className=
+    "msg "+type;
+
+  div.textContent=text;
+
+  /*
+    ONLY BOT MESSAGES can trigger
+    the copy secret.
+  */
+
+  if(type==="bot"){
+
+    div.dataset.botResponse=
+      "true";
+
+    div.title=
+      "Copy this response to discover a secret";
+
+    div.addEventListener(
+      "copy",
+      handleBotCopy
+    );
+  }
+
+  chatBox.appendChild(div);
+
+  chatBox.scrollTop=
+    chatBox.scrollHeight;
+}
+
+
+/* =========================
+   BOT RESPONSE SYSTEM
+========================= */
+
+const responses=[
+
+"Interesting! 🤔 Tell me more.",
+
+"🐔 Chicken Butt detected! That's definitely important.",
+
+"Whoa! 🤖 My circuits are thinking about that one.",
+
+"That's a pretty interesting question!",
+
+"Maybe the Chicken Butts know the answer. 🐔",
+
+"ERROR... just kidding. 😎 Everything is working!",
+
+"Have you tried Chicken Butt Racing yet?",
+
+"🎰 Roulette is waiting for you!",
+
+"🪦 The Tombstone arena awaits.",
+
+"⭐ You could spend those points on a new skin!",
+
+"That reminds me of Glitch World... ⚡",
+
+"Excellent question! My answer is: probably chicken. 🐔",
+
+"🤖 Processing... processing... CHICKEN BUTT.",
+
+"That's something I definitely wasn't expecting!",
+
+"Try saying something completely random. 😂"
+
+];
+
+
+function getBotReply(text){
+
+  const lower=
+    text.toLowerCase();
+
+  if(
+    lower.includes("hello") ||
+    lower.includes("hi")
+  ){
+
+    return[
+      "Hello! 👋 I'm Mini ChatGPT!",
+      "HEY! 🤖 What's up?",
+      "Welcome back! 🐔",
+      "Hello there! Ready to cause chaos?"
+    ][
+      Math.floor(
+        Math.random()*4
+      )
+    ];
+  }
+
+
+  if(
+    lower.includes("chicken")
+  ){
+
+    return[
+      "🐔 CHICKEN BUTT!",
+      "The Chicken Butts approve. 🐔",
+      "Chicken Butt Racing time!",
+      "That's the most important chicken question ever."
+    ][
+      Math.floor(
+        Math.random()*4
+      )
+    ];
+  }
+
+
+  if(
+    lower.includes("game")
+  ){
+
+    return[
+      "🎮 Try the race!",
+      "🎰 Roulette is fun!",
+      "🪦 Challenge me in RPS!",
+      "🎨 Check out the skins!"
+    ][
+      Math.floor(
+        Math.random()*4
+      )
+    ];
+  }
+
+
+  return responses[
+    Math.floor(
+      Math.random()*
+      responses.length
+    )
+  ];
+}
+
+
+function sendChat(){
+
+  const text=
+    chatInput.value.trim();
+
+  if(!text)return;
+
+  addMessage(
+    text,
+    "user"
+  );
+
+  chatInput.value="";
+
+  const lower=
+    text.toLowerCase();
+
+
+  /*
+    GLITCH WORLD:
+    This ONLY causes the glitch.
+    It does NOT summon the boss.
+  */
+
+  if(
+    lower.includes(
+      "glitch world"
+    )
+  ){
+
+    secrets.glitch=true;
+
+    document.body.className=
+      "glitch";
+
+    addMessage(
+      "⚡ GLITCH WORLD DETECTED!!! The screen is glitching!",
+      "bot"
+    );
+
+    sound("boss");
+
+    checkSecrets();
+    save();
+
+    return;
+  }
+
+
+  addMessage(
+    getBotReply(text),
+    "bot"
+  );
+
+  save();
+}
+
+
+document.getElementById(
+  "sendBtn"
+).onclick=sendChat;
+
+
+chatInput.addEventListener(
+  "keydown",
+  e=>{
+    if(e.key==="Enter")
+      sendChat();
+  }
+);
+
+
+/* =========================
+   COPY ONLY BOT RESPONSE
+========================= */
+
+function handleBotCopy(e){
+
+  /*
+    This function runs ONLY when
+    a Mini ChatGPT response is copied.
+  */
+
+  secrets.copy=true;
+
+  sound("secret");
+
+  addMessage(
+    "📋 SECRET FOUND! You copied my response...",
+    "bot"
+  );
+
+  checkSecrets();
+
+  save();
+
+  setTimeout(()=>{
+
+    /*
+      Boss ONLY appears because
+      a bot response was copied.
+    */
+
+    addMessage(
+      "👹 WAIT... SOMETHING WOKE UP!",
+      "bot"
+    );
+
+    awakenBoss();
+
+  },800);
+}
+
+
+/* =========================
+   START
+========================= */
+
+renderChickens();
+
+renderSkins();
+
+renderSecrets();
+
+updateChickenDisplay();
+
+updateUI();
+
+</script>
+
+</body>
+</html>
